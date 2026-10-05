@@ -39,6 +39,7 @@ export type Matcher = {
 export type Configuration = {
   enabled: boolean;
   notificationCenter: {
+    clearOnFocus: boolean;
     disableGrouping: boolean;
     maximumPerSource: number;
   };
@@ -145,6 +146,7 @@ export class SettingsManager {
     return {
       enabled: true,
       notificationCenter: {
+        clearOnFocus: false,
         disableGrouping: false,
         maximumPerSource: NOTIFICATIONS_PER_SOURCE_DEFAULT,
       },
@@ -205,6 +207,7 @@ export class SettingsManager {
       },
       filtering: { enabled: false, action: "hide" },
       notificationCenter: {
+        clearOnFocus: false,
         disableGrouping: false,
         maximumPerSource: NOTIFICATIONS_PER_SOURCE_DEFAULT,
       },
@@ -593,6 +596,10 @@ export class SettingsManager {
     return {
       enabled: normalizeBoolean(candidate.enabled, defaults.enabled),
       notificationCenter: {
+        clearOnFocus: normalizeBoolean(
+          candidate.notificationCenter?.clearOnFocus,
+          defaults.notificationCenter.clearOnFocus,
+        ),
         disableGrouping: normalizeBoolean(
           candidate.notificationCenter?.disableGrouping,
           defaults.notificationCenter.disableGrouping,

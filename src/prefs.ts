@@ -410,6 +410,18 @@ export default class NotificationConfiguratorPreferences extends ExtensionPrefer
     });
     page.add(notificationCenterGroup);
 
+    const clearOnFocusRow = new Adw.SwitchRow({
+      title: _("Clear Notifications on Focus"),
+      subtitle: _(
+        "Clear matching notifications when their application gains focus",
+      ),
+    });
+    clearOnFocusRow.set_active(config.notificationCenter.clearOnFocus);
+    clearOnFocusRow.connect("notify::active", () => {
+      config.notificationCenter.clearOnFocus = clearOnFocusRow.get_active();
+      onSave();
+    });
+
     const disableGroupingRow = new Adw.SwitchRow({
       title: _("Disable Stacking"),
       subtitle: _("Create a separate entry for each matching notification"),
@@ -440,6 +452,7 @@ export default class NotificationConfiguratorPreferences extends ExtensionPrefer
 
     const updateNotificationCenterVisibility = () => {
       const active = !overrides || overrides.notificationCenter;
+      clearOnFocusRow.set_visible(active);
       disableGroupingRow.set_visible(active);
       maximumPerSourceRow.set_visible(active);
     };
@@ -456,6 +469,7 @@ export default class NotificationConfiguratorPreferences extends ExtensionPrefer
 
     notificationCenterGroup.add(disableGroupingRow);
     notificationCenterGroup.add(maximumPerSourceRow);
+    notificationCenterGroup.add(clearOnFocusRow);
     updateNotificationCenterVisibility();
 
     const rateLimitGroup = new Adw.PreferencesGroup({
